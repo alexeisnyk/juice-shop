@@ -156,7 +156,7 @@
     "sequelize-noupdate-attributes": "^1.0.0",
     "serve-index": "^1.9.1",
     "socket.io": "^2.3.0",
-    "sqlite3": "^5.0.0",
+    "sqlite3": "^5.0.3",
     "svg-captcha": "^1.4.0",
     "swagger-ui-express": "^4.1.4",
     "unzipper": "0.9.15",
