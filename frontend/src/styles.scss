@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-@import 'theme';
+@import "theme";
 
 @mixin link-theme($theme) {
   a:link,
@@ -25,7 +25,11 @@
 
 @mixin deluxe-membership-theme($theme) {
   .deluxe-membership {
-    background: linear-gradient(90deg, mat-color(map-get($theme, primary), 1) 0%, mat-color(map-get($theme, background), card) 100%);
+    background: linear-gradient(
+      90deg,
+      mat-color(map-get($theme, primary), 1) 0%,
+      mat-color(map-get($theme, background), card) 100%
+    );
   }
 }
 
@@ -69,7 +73,7 @@
 
 @mixin image-thumbnail-theme($theme) {
   .img-thumbnail {
-    background-color: mat-color(map-get($theme, primary), .05);
+    background-color: mat-color(map-get($theme, primary), 0.05);
     border: 1px solid mat-color(map-get($theme, primary));
     border-radius: 3px;
     padding: 3px;
@@ -113,7 +117,7 @@
 
 @mixin overlay-theme($theme) {
   .overlay {
-    background: mat-color(map-get($theme, primary), darker, .7);
+    background: mat-color(map-get($theme, primary), darker, 0.7);
   }
 }
 
@@ -128,7 +132,7 @@
   @include overlay-theme($theme);
 }
 
-$bg-hacking-instructor: rgba(0, 0, 0, .3);
+$bg-hacking-instructor: rgba(0, 0, 0, 0.3);
 
 .deeppurple-amber-theme {
   @include angular-material-theme($deeppurple-amber-theme);
@@ -209,4 +213,8 @@ $bg-hacking-instructor: rgba(0, 0, 0, .3);
   border-radius: 1px;
   font-family: monospace;
   padding: 0 4px;
+}
+
+#test {
+  border: 1px solid blue;
 }
