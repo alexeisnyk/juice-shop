@@ -97,7 +97,7 @@
     ]
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.4",
     "check-dependencies": "^1.1.0",
     "clarinet": "^0.12.4",
     "colors": "^1.4.0",
@@ -109,7 +109,7 @@
     "dottie": "^2.0.2",
     "download": "^8.0.0",
     "errorhandler": "^1.5.1",
-    "express": "^4.17.1",
+    "express": "^4.22.0",
     "express-jwt": "0.1.3",
     "express-rate-limit": "^5.1.3",
     "express-robots-txt": "^0.4.1",
@@ -156,7 +156,7 @@
     "sequelize-noupdate-attributes": "^1.0.0",
     "serve-index": "^1.9.1",
     "socket.io": "^2.3.0",
-    "sqlite3": "^5.0.0",
+    "sqlite3": "^5.0.3",
     "svg-captcha": "^1.4.0",
     "swagger-ui-express": "^4.1.4",
     "unzipper": "0.9.15",
