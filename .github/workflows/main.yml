@@ -1,0 +1,37 @@
+name: Snyk SCA & Code CLI Monitor
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14.x
+          cache: 'npm'
+
+      - name: Install Snyk CLI and snyk-to-html
+        run: |
+          npm install snyk -g
+          npm install snyk-to-html -g
+
+      - name: Authenticate Snyk CLI
+        run: snyk auth ${{ secrets.SNYK_AUTH }}
+
+      - name: Snyk Open Source test and monitor
+        run: |
+          snyk test || true
+          snyk monitor
+
+      - name: Snyk Code test
+        run: snyk code test || true
