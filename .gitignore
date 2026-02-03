@@ -68,3 +68,6 @@ config/*.yml
 !config/tutorial.yml
 !config/oss.yml
 kubeconfig_*
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md
