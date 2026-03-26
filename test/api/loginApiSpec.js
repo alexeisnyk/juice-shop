@@ -24,7 +24,7 @@ describe('/rest/user/login', () => {
       headers: jsonHeader,
       body: {
         email: 'kalli@kasper.le',
-        password: 'kallliiii'
+        password: process.env.PASSWORD
       }
     })
       .expect('status', 201)

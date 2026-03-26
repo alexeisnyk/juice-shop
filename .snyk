@@ -1,0 +1,7 @@
+# Snyk (https://snyk.io) policy file
+---
+exclude:
+    global:
+        # Exclude a single directory. For example, - src/lib
+        - routes
+     

