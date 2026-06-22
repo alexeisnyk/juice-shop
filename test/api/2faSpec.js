@@ -2,7 +2,7 @@
  * Copyright (c) 2014-2021 Bjoern Kimminich.
  * SPDX-License-Identifier: MIT
  */
-
+// This is a test comment. It is not part of the original code and should be removed before running the tests.
 const frisby = require('frisby')
 const Joi = frisby.Joi
 const insecurity = require('../../lib/insecurity')
