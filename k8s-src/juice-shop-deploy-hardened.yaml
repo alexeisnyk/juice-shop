@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snyk-juice-shop
+  labels:
+    app: snyk-juice-shop
+spec:
+  selector:
+    matchLabels:
+      app: snyk-juice-shop
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: snyk-juice-shop
+    spec:
+      # Pod-level hardening
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
+      containers:
+      - name: juice-shop
+        image: clintonherget/snyk-juice-shop
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        # Resource requests/limits — clears the "no limits" findings
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        # Container-level hardening — replaces `privileged: true`
+        securityContext:
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        # Read-only root FS needs writable mounts for the app's runtime paths.
+        # NOTE: this is an older (2022) fork image. If the pod crash-loops on the
+        # live "after" deploy, comment out readOnlyRootFilesystem + these mounts —
+        # the IaC scan still passes without them; only the runtime needs them.
+        volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          - name: data
+            mountPath: /juice-shop/data
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: data
+          emptyDir: {}

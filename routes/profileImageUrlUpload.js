@@ -4,6 +4,7 @@
  */
 
 const fs = require('fs')
+const path = require('path')
 const models = require('../models/index')
 const insecurity = require('../lib/insecurity')
 const request = require('request')
@@ -24,9 +25,12 @@ module.exports = function profileImageUrlUpload () {
           })
           .on('response', function (res) {
             if (res.statusCode === 200) {
-              const ext = ['jpg', 'jpeg', 'png', 'svg', 'gif'].includes(url.split('.').slice(-1)[0].toLowerCase()) ? url.split('.').slice(-1)[0].toLowerCase() : 'jpg'
-              imageRequest.pipe(fs.createWriteStream(`frontend/dist/frontend/assets/public/images/uploads/${loggedInUser.data.id}.${ext}`))
-              models.User.findByPk(loggedInUser.data.id).then(user => { return user.update({ profileImage: `/assets/public/images/uploads/${loggedInUser.data.id}.${ext}` }) }).catch(error => { next(error) })
+              const allowedExts = ['jpg', 'jpeg', 'png', 'svg', 'gif']
+              const rawExt = String(url).split('.').slice(-1)[0].toLowerCase()
+              const safeExt = allowedExts.indexOf(rawExt) !== -1 ? allowedExts[allowedExts.indexOf(rawExt)] : 'jpg'
+              const safeId = path.basename(String(loggedInUser.data.id)).replace(/(\.\.(\/|\\))/g, '')
+              imageRequest.pipe(fs.createWriteStream(`frontend/dist/frontend/assets/public/images/uploads/${safeId}.${safeExt}`))
+              models.User.findByPk(loggedInUser.data.id).then(user => { return user.update({ profileImage: `/assets/public/images/uploads/${safeId}.${safeExt}` }) }).catch(error => { next(error) })
             } else models.User.findByPk(loggedInUser.data.id).then(user => { return user.update({ profileImage: url }) }).catch(error => { next(error) })
           })
       } else {
