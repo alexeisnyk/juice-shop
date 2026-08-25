@@ -18,7 +18,7 @@ jobs:
 
       - name: Snyk Code
         continue-on-error: true
-        run: snyk code test --severity-threshold=high --report
+        run: snyk code test --severity-threshold=high
 
       - uses: actions/setup-node@v4
         with:
@@ -48,4 +48,4 @@ jobs:
 
       - name: Snyk IaC
         continue-on-error: true
-        run: snyk iac test . --severity-threshold=high --report
+        run: snyk iac test . --severity-threshold=high
