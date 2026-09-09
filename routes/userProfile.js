@@ -2,7 +2,7 @@
  * Copyright (c) 2014-2021 Bjoern Kimminich.
  * SPDX-License-Identifier: MIT
  */
-
+//comentariu Liv
 const fs = require('fs')
 const models = require('../models/index')
 const utils = require('../lib/utils')
