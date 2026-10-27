@@ -32,6 +32,7 @@ const {
   handleXmlUpload
 } = require('./routes/fileUpload')
 const profileImageFileUpload = require('./routes/profileImageFileUpload')
+const productImport = require('./routes/productImport')
 const profileImageUrlUpload = require('./routes/profileImageUrlUpload')
 const redirect = require('./routes/redirect')
 const angular = require('./routes/angular')
@@ -43,6 +44,7 @@ const repeatNotification = require('./routes/repeatNotification')
 const continueCode = require('./routes/continueCode')
 const restoreProgress = require('./routes/restoreProgress')
 const fileServer = require('./routes/fileServer')
+const uploadDownload = require('./routes/uploadDownload')
 const quarantineServer = require('./routes/quarantineServer')
 const keyServer = require('./routes/keyServer')
 const logFileServer = require('./routes/logfileServer')
@@ -266,6 +268,7 @@ app.post('/file-upload', uploadToMemory.single('file'), ensureFileIsPassed, metr
 app.post('/profile/image/file', uploadToMemory.single('file'), ensureFileIsPassed, metrics.observeFileUploadMetricsMiddleware(), profileImageFileUpload())
 app.post('/profile/image/url', uploadToMemory.single('file'), profileImageUrlUpload())
 app.post('/rest/memories', uploadToDisk.single('image'), ensureFileIsPassed, insecurity.appendUserId(), metrics.observeFileUploadMetricsMiddleware(), memory.addMemory())
+app.post('/rest/products/import', productImport())
 
 app.use(bodyParser.text({ type: '*/*' }))
 app.use(function jsonParser (req, res, next) {
@@ -557,6 +560,7 @@ app.post('/rest/products/reviews', insecurity.isAuthorized(), likeProductReviews
 app.post('/b2b/v2/orders', b2bOrder())
 
 /* File Serving */
+app.get('/uploads/download', uploadDownload())
 app.get('/the/devs/are/so/funny/they/hid/an/easter/egg/within/the/easter/egg', easterEgg())
 app.get('/this/page/is/hidden/behind/an/incredibly/high/paywall/that/could/only/be/unlocked/by/sending/1btc/to/us', premiumReward())
 app.get('/we/may/also/instruct/you/to/refuse/all/reasonably/necessary/responsibility', privacyPolicyProof())

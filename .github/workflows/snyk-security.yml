@@ -1,0 +1,76 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# A sample workflow which sets up Snyk to analyze the full Snyk platform (Snyk Open Source, Snyk Code,
+# Snyk Container and Snyk Infrastructure as Code)
+# The setup installs the Snyk CLI - for more details on the possible commands
+# check https://docs.snyk.io/snyk-cli/cli-reference
+# The results of Snyk Code are then uploaded to GitHub Security Code Scanning
+#
+# In order to use the Snyk Action you will need to have a Snyk API token.
+# More details in https://github.com/snyk/actions#getting-your-snyk-token
+# or you can signup for free at https://snyk.io/login
+#
+# For more examples, including how to limit scans to only high-severity issues
+# and fail PR checks, see https://github.com/snyk/actions/
+
+name: Snyk Security
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # Grimmerie Template Org: Settings -> General -> Organization ID
+      SNYK_CFG_ORG: c0040cec-8f74-4d0e-812e-d38d3efcbfbe
+ 
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
+
+      - name: Verify Snyk auth
+        run: snyk whoami --experimental
+
+      - name: Snyk Code test
+        run: snyk code test --sarif-file-output=snyk-code.sarif || true
+
+      - name: Snyk Open Source monitor
+        run: snyk monitor --all-projects
+
+      - name: Snyk Open Source test (JSON)
+        run: snyk test --all-projects --json-file-output=snyk-oss.json || true
+
+      - name: Generate HTML report
+        if: hashFiles('snyk-oss.json') != ''
+        run: npx --yes snyk-to-html -i snyk-oss.json -o snyk-oss.html
+
+      - name: Upload Snyk HTML report
+        if: ${{ always() && hashFiles('snyk-oss.html') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-oss-report
+          path: snyk-oss.html
+          retention-days: 30
+
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v4
+        if: hashFiles('snyk-code.sarif') != ''
+        with:
+          sarif_file: snyk-code.sarif
