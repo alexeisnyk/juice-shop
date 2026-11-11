@@ -1,0 +1,35 @@
+name: Snyk AI-BOM
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  aibom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # AI-BOM analyses your Python project, so set up Python and install deps
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Install Snyk CLI
+        uses: snyk/actions/setup@master
+
+      - name: Generate and upload AI-BOM
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk aibom --upload \
+            --repo https://github.com/${{ github.repository }}
